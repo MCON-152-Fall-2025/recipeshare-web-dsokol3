@@ -65,7 +65,22 @@ class RecipeControllerTest {
                 "'Pancakes','Fluffy pancakes','1 cup flour;2 eggs;1 cup milk','Cook on skillet until golden'"
         })
         void parameterizedAddRecipeTest(String title, String description, String ingredients, String instructions) throws Exception {
-            throw new UnsupportedOperationException("parameterizedAddRecipeTest");
+            ObjectNode json = mapper.createObjectNode();
+            json.put("title", title);
+            json.put("description", description);
+            json.put("ingredients", ingredients);
+            json.put("instructions", instructions);
+
+            String jsonString = mapper.writeValueAsString(json);
+            mockMvc.perform(post("/api/recipes")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonString))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.title").value(title))
+                    .andExpect(jsonPath("$.description").value(description))
+                    .andExpect(jsonPath("$.ingredients").value(ingredients))
+                    .andExpect(jsonPath("$.instructions").value(instructions))
+                    .andExpect(jsonPath("$.id").isNumber());
         }
     }
 
@@ -158,28 +173,49 @@ class RecipeControllerTest {
             void testGetNonExistingRecipe() throws Exception {
                 // Skeleton: Try to get a recipe with a non-existing ID
                 // Example: mockMvc.perform(get("/api/recipes/9999"))...
-                throw new UnsupportedOperationException("testGetNonExistingRecipe not implemented");
+                mockMvc.perform(get("/api/recipes/9999"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$").doesNotExist());
             }
 
             @Test
             void testPutNonExistingRecipe() throws Exception {
                 // Skeleton: Try to update a recipe with a non-existing ID
                 // Example: mockMvc.perform(put("/api/recipes/9999"))...
-                throw new UnsupportedOperationException("testPutNonExistingRecipe not implemented");
+                ObjectNode json = mapper.createObjectNode();
+                json.put("title", "Non Exist");
+                json.put("description", "Nope");
+                json.put("ingredients", "none");
+                json.put("instructions", "none");
+
+                mockMvc.perform(put("/api/recipes/9999")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(json)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$").doesNotExist());
             }
 
             @Test
             void testPatchNonExistingRecipe() throws Exception {
                 // Skeleton: Try to patch a recipe with a non-existing ID
                 // Example: mockMvc.perform(patch("/api/recipes/9999"))...
-                throw new UnsupportedOperationException("testPatchNonExistingRecipe not implemented");
+                ObjectNode json = mapper.createObjectNode();
+                json.put("title", "No title");
+
+                mockMvc.perform(patch("/api/recipes/9999")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(json)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$").doesNotExist());
             }
 
             @Test
             void testDeleteNonExistingRecipe() throws Exception {
                 // Skeleton: Try to delete a recipe with a non-existing ID
                 // Example: mockMvc.perform(delete("/api/recipes/9999"))...
-                throw new UnsupportedOperationException("testDeleteNonExistingRecipe not implemented");
+                mockMvc.perform(delete("/api/recipes/9999"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$").value(false));
             }
         }
 
