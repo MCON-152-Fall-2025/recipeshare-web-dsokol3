@@ -48,6 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
             existing.setDescription(updatedRecipe.getDescription());
             existing.setIngredients(updatedRecipe.getIngredients());
             existing.setInstructions(updatedRecipe.getInstructions());
+            existing.setServings(updatedRecipe.getServings());
             return repo.save(existing);
         });
     }
@@ -59,6 +60,7 @@ public class RecipeServiceImpl implements RecipeService {
             if (partialRecipe.getDescription() != null) existing.setDescription(partialRecipe.getDescription());
             if (partialRecipe.getIngredients() != null) existing.setIngredients(partialRecipe.getIngredients());
             if (partialRecipe.getInstructions() != null) existing.setInstructions(partialRecipe.getInstructions());
+            if (partialRecipe.getServings() != null) existing.setServings(partialRecipe.getServings());
             return repo.save(existing);
         });
     }
