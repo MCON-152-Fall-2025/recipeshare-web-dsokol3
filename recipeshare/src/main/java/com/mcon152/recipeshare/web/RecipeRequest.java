@@ -16,6 +16,10 @@ public class RecipeRequest {
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
+    // Backwards-compatible accessors (some code/tests expect "name")
+    public String getName() { return title; }
+    public void setName(String name) { this.title = name; }
+
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
